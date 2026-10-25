@@ -1,0 +1,213 @@
+{
+ "ref_date": "2026-10-25",
+ "thresholds": {
+  "medium": 65.46205207084424,
+  "high": 79.81126171542701
+ },
+ "rule_trigger_rate_on_clean_train": {
+  "missing_company": 0.011976047904191617,
+  "missing_date": 0.03592814371257485,
+  "missing_total": 0.00499001996007984,
+  "date_invalid": 0.0249500998003992,
+  "date_future": 0.010978043912175649,
+  "date_too_old": 0.0,
+  "totals_conflict": 0.05788423153692615,
+  "subtotal_tax_mismatch": 0.14271457085828343,
+  "cash_change_mismatch": 0.07085828343313373,
+  "items_sum_mismatch": 0.3073852295409182,
+  "tax_rate_unusual": 0.020958083832335328,
+  "total_not_max": 0.0748502994011976,
+  "low_confidence": 0.20059880239520958
+ },
+ "gt": {
+  "n_clean": 125,
+  "n_fraud": 737,
+  "roc_auc": 0.8316906377204885,
+  "pr_auc": 0.9686052294863696,
+  "fpr@medium": 0.08,
+  "recall@medium": 0.587516960651289,
+  "recall_by_type@medium": {
+   "date_future": 0.872,
+   "date_impossible": 0.664,
+   "field_removed": 0.9596774193548387,
+   "item_altered": 0.36363636363636365,
+   "tax_altered": 0.19318181818181818,
+   "total_consistent": 0.312,
+   "total_inflated": 0.5
+  },
+  "fpr@high": 0.008,
+  "recall@high": 0.417910447761194,
+  "recall_by_type@high": {
+   "date_future": 0.864,
+   "date_impossible": 0.56,
+   "field_removed": 0.7338709677419355,
+   "item_altered": 0.030303030303030304,
+   "tax_altered": 0.07954545454545454,
+   "total_consistent": 0.136,
+   "total_inflated": 0.15476190476190477
+  },
+  "model_at_rules_fpr": {
+   "fpr": 0.144,
+   "recall": 0.655359565807327
+  },
+  "rules_only": {
+   "fpr": 0.144,
+   "recall": 0.6092265943012212,
+   "recall_by_type": {
+    "date_future": 0.928,
+    "date_impossible": 0.704,
+    "field_removed": 0.6774193548387096,
+    "item_altered": 0.25757575757575757,
+    "tax_altered": 0.2159090909090909,
+    "total_consistent": 0.456,
+    "total_inflated": 0.8095238095238095
+   }
+  },
+  "component_roc_auc": {
+   "iforest_only": 0.7806675712347354,
+   "rule_pvalues_only": 0.7962008141112618,
+   "full_model": 0.8316906377204885
+  },
+  "leave_one_type_out": {
+   "total_inflated": {
+    "roc_auc": 0.7259047619047618,
+    "recall@medium": 0.20238095238095238,
+    "fpr@medium": 0.072
+   },
+   "total_consistent": {
+    "roc_auc": 0.675968,
+    "recall@medium": 0.232,
+    "fpr@medium": 0.048
+   },
+   "item_altered": {
+    "roc_auc": 0.7253333333333333,
+    "recall@medium": 0.09090909090909091,
+    "fpr@medium": 0.088
+   },
+   "date_impossible": {
+    "roc_auc": 0.43609600000000004,
+    "recall@medium": 0.04,
+    "fpr@medium": 0.104
+   },
+   "date_future": {
+    "roc_auc": 0.7259519999999999,
+    "recall@medium": 0.04,
+    "fpr@medium": 0.072
+   },
+   "field_removed": {
+    "roc_auc": 0.704,
+    "recall@medium": 0.03225806451612903,
+    "fpr@medium": 0.104
+   },
+   "tax_altered": {
+    "roc_auc": 0.5375,
+    "recall@medium": 0.13636363636363635,
+    "fpr@medium": 0.064
+   }
+  }
+ },
+ "tess": {
+  "n_clean": 125,
+  "n_fraud": 603,
+  "roc_auc": 0.745804311774461,
+  "pr_auc": 0.93434880473957,
+  "fpr@medium": 0.176,
+  "recall@medium": 0.5041459369817579,
+  "recall_by_type@medium": {
+   "date_future": 0.8645833333333334,
+   "date_impossible": 0.625,
+   "field_removed": 0.8076923076923077,
+   "item_altered": 0.21212121212121213,
+   "tax_altered": 0.23376623376623376,
+   "total_consistent": 0.25471698113207547,
+   "total_inflated": 0.3103448275862069
+  },
+  "fpr@high": 0.064,
+  "recall@high": 0.3167495854063018,
+  "recall_by_type@high": {
+   "date_future": 0.8541666666666666,
+   "date_impossible": 0.3541666666666667,
+   "field_removed": 0.4230769230769231,
+   "item_altered": 0.06060606060606061,
+   "tax_altered": 0.1038961038961039,
+   "total_consistent": 0.12264150943396226,
+   "total_inflated": 0.10344827586206896
+  },
+  "model_at_rules_fpr": {
+   "fpr": 0.368,
+   "recall": 0.7097844112769486
+  },
+  "rules_only": {
+   "fpr": 0.368,
+   "recall": 0.6500829187396352,
+   "recall_by_type": {
+    "date_future": 0.8958333333333334,
+    "date_impossible": 0.7708333333333334,
+    "field_removed": 0.7692307692307693,
+    "item_altered": 0.45454545454545453,
+    "tax_altered": 0.36363636363636365,
+    "total_consistent": 0.49056603773584906,
+    "total_inflated": 0.7241379310344828
+   }
+  },
+  "component_roc_auc": {
+   "iforest_only": 0.6393034825870647,
+   "rule_pvalues_only": 0.6952238805970149,
+   "full_model": 0.745804311774461
+  },
+  "leave_one_type_out": {
+   "total_inflated": {
+    "roc_auc": 0.5521379310344827,
+    "recall@medium": 0.1896551724137931,
+    "fpr@medium": 0.192
+   },
+   "total_consistent": {
+    "roc_auc": 0.5715094339622643,
+    "recall@medium": 0.2169811320754717,
+    "fpr@medium": 0.192
+   },
+   "item_altered": {
+    "roc_auc": 0.6050909090909091,
+    "recall@medium": 0.15151515151515152,
+    "fpr@medium": 0.192
+   },
+   "date_impossible": {
+    "roc_auc": 0.35975,
+    "recall@medium": 0.010416666666666666,
+    "fpr@medium": 0.176
+   },
+   "date_future": {
+    "roc_auc": 0.5190833333333333,
+    "recall@medium": 0.020833333333333332,
+    "fpr@medium": 0.184
+   },
+   "field_removed": {
+    "roc_auc": 0.5651538461538462,
+    "recall@medium": 0.019230769230769232,
+    "fpr@medium": 0.04
+   },
+   "tax_altered": {
+    "roc_auc": 0.5491428571428572,
+    "recall@medium": 0.22077922077922077,
+    "fpr@medium": 0.184
+   }
+  }
+ },
+ "top_coefficients": {
+  "rule_surprise_fisher": 1.1727178893164172,
+  "rule_surprise_max": 0.7535365554884534,
+  "date_future:hit": 0.579755649673317,
+  "date_future:resid": -0.5559176973220629,
+  "ocr_conf": 0.35909875648011946,
+  "max_arith_resid": -0.34422984299712867,
+  "conf_date": 0.34381806492592987,
+  "any_date_rule": 0.33602112679950297,
+  "low_confidence:hit": -0.31308323291560725,
+  "tax_rate_unusual:hit": -0.30898524443312464,
+  "low_confidence:resid": 0.30017565770218235,
+  "n_soft_hits": -0.2632216228922172,
+  "missing_company:hit": -0.2436329591421415,
+  "any_missing_field": 0.23125106114157798,
+  "total_not_max:hit": -0.2101311589607082
+ }
+}

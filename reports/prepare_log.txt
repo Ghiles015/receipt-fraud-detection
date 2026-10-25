@@ -1,0 +1,4 @@
+626 documents : 501 train / 125 test
+Corrupt JPEG data: bad Huffman code
+OCR train: 501 images en 367s
+OCR test: 125 images en 486s

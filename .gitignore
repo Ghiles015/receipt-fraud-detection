@@ -1,0 +1,6 @@
+data/sroie
+data/processed
+__pycache__/
+*.pyc
+models/layoutlm/
+reports/fraud_scores.npz

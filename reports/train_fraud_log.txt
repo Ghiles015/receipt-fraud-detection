@@ -1,0 +1,23 @@
+Extraction hors pli des reçus d'entraînement...
+train : 1002 authentiques, 2597 falsifiés
+seuils : moyen >= 65.5, élevé >= 79.8
+
+[gt] ROC-AUC 0.832  PR-AUC 0.969  FPR@moyen 8.0%  rappel@moyen 58.8%  | règles seules : FPR 14.4% rappel 60.9% | modèle au même FPR : rappel 65.5%
+    date_future        rappel  87.2%   (règles  92.8%, type jamais vu   4.0%)
+    date_impossible    rappel  66.4%   (règles  70.4%, type jamais vu   4.0%)
+    field_removed      rappel  96.0%   (règles  67.7%, type jamais vu   3.2%)
+    item_altered       rappel  36.4%   (règles  25.8%, type jamais vu   9.1%)
+    tax_altered        rappel  19.3%   (règles  21.6%, type jamais vu  13.6%)
+    total_consistent   rappel  31.2%   (règles  45.6%, type jamais vu  23.2%)
+    total_inflated     rappel  50.0%   (règles  81.0%, type jamais vu  20.2%)
+
+[tess] ROC-AUC 0.746  PR-AUC 0.934  FPR@moyen 17.6%  rappel@moyen 50.4%  | règles seules : FPR 36.8% rappel 65.0% | modèle au même FPR : rappel 71.0%
+    date_future        rappel  86.5%   (règles  89.6%, type jamais vu   2.1%)
+    date_impossible    rappel  62.5%   (règles  77.1%, type jamais vu   1.0%)
+    field_removed      rappel  80.8%   (règles  76.9%, type jamais vu   1.9%)
+    item_altered       rappel  21.2%   (règles  45.5%, type jamais vu  15.2%)
+    tax_altered        rappel  23.4%   (règles  36.4%, type jamais vu  22.1%)
+    total_consistent   rappel  25.5%   (règles  49.1%, type jamais vu  21.7%)
+    total_inflated     rappel  31.0%   (règles  72.4%, type jamais vu  19.0%)
+
+Modèle sauvegardé : models/risk_model.joblib

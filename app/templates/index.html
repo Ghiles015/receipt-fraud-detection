@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrôle de reçus</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a64; --line: #e3e1da;
+    --ok: #2f7d4f; --ok-bg: #e6f2ea; --warn: #b26a00; --warn-bg: #fbf0dc; --bad: #b3261e; --bad-bg: #fbe7e5;
+    --company: #3e63dd; --date: #8e4ec6; --address: #12a594; --total: #e5484d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 20px 28px; border-bottom: 1px solid var(--line); display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 18px; margin: 0; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  main { padding: 24px 28px; max-width: 1280px; margin: 0 auto; }
+  .upload { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .upload input[type=file] { font-size: 14px; }
+  button { background: var(--ink); color: #fff; border: 0; border-radius: 7px; padding: 8px 14px; font-size: 14px; cursor: pointer; }
+  .samples { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .samples a { color: var(--ink); margin-right: 10px; text-decoration: none; border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  .doc { position: relative; width: 100%; }
+  .doc img { width: 100%; display: block; border-radius: 4px; }
+  .box { position: absolute; border: 2px solid; border-radius: 2px; }
+  .box.company { border-color: var(--company); } .box.date { border-color: var(--date); }
+  .box.address { border-color: var(--address); } .box.total { border-color: var(--total); }
+  .risk { display: flex; align-items: center; gap: 18px; }
+  .score { font-size: 44px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+  .lvl-faible { background: var(--ok-bg); color: var(--ok); }
+  .lvl-moyen { background: var(--warn-bg); color: var(--warn); }
+  .lvl-élevé { background: var(--bad-bg); color: var(--bad); }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; margin-top: 12px; position: relative; overflow: hidden; }
+  .bar span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  .check { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .check:last-child { border-bottom: 0; }
+  .check .ic { width: 20px; flex: none; font-weight: 700; }
+  .check.hit .ic { color: var(--bad); } .check.pass .ic { color: var(--ok); } .check.na { color: var(--muted); }
+  .check small { display: block; color: var(--muted); }
+  .stack > * + * { margin-top: 20px; }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Contrôle de reçus</h1>
+  <p>Extraction des champs · contrôles de cohérence · score de risque</p>
+</header>
+<main>
+  <form class="upload" action="/analyze" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*" required>
+    <button type="submit">Analyser</button>
+  </form>
+  {% if samples %}
+  <div class="samples">Exemples :
+    {% for s in samples %}<a href="/sample/{{ s }}">{{ s.rsplit('.',1)[0] }}</a>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if report %}
+  <div class="grid">
+    <div class="card">
+      <h2>{{ name }}</h2>
+      <div class="doc">
+        <img src="{{ image }}" alt="reçu analysé">
+        {% for l in report.lines if l.field %}
+        <div class="box {{ l.field }}" title="{{ l.field }} : {{ l.text }}"
+             style="left:{{ 100*l.box[0]/img_w }}%;top:{{ 100*l.box[1]/img_h }}%;width:{{ 100*(l.box[2]-l.box[0])/img_w }}%;height:{{ 100*(l.box[3]-l.box[1])/img_h }}%"></div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card">
+        <h2>Score de risque</h2>
+        {% set color = {'faible':'var(--ok)','moyen':'var(--warn)','élevé':'var(--bad)'}[report.risk_level] %}
+        <div class="risk">
+          <div class="score" style="color: {{ color }}">{{ '%.0f' % report.risk_score }}<span style="font-size:18px;color:var(--muted)">/100</span></div>
+          <span class="pill lvl-{{ report.risk_level }}">Risque {{ report.risk_level }}</span>
+        </div>
+        <div class="bar"><span style="width:{{ report.risk_score }}%;background:{{ color }}"></span></div>
+        <div class="note">Seuils : moyen ≥ {{ '%.0f' % thresholds.medium }}, élevé ≥ {{ '%.0f' % thresholds.high }}
+          (fixés pour ~10 % et ~3 % de faux positifs sur des reçus authentiques).
+          {% if report.anomaly is not none %}Score d'anomalie : {{ report.anomaly }}.{% endif %}</div>
+      </div>
+
+      <div class="card">
+        <h2>Champs extraits</h2>
+        <table>
+          <tr><th>Champ</th><th>Valeur</th><th>Confiance</th></tr>
+          {% for f, label in [('company','Commerçant'),('date','Date'),('address','Adresse'),('total','Total')] %}
+          <tr>
+            <td><span class="dot" style="background:var(--{{ f }})"></span>{{ label }}</td>
+            <td class="mono">{{ report.fields[f] or '—' }}</td>
+            <td>{{ '%.0f' % (100*report.confidence.get(f,0)) }} %</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% set fin = report.financials %}
+        <div class="note">Structure lue : sous-total {{ fin.subtotal if fin.subtotal is not none else '—' }} ·
+          taxe {{ fin.tax if fin.tax is not none else '—' }} · espèces {{ fin.cash if fin.cash is not none else '—' }} ·
+          rendu {{ fin.change if fin.change is not none else '—' }} · {{ fin['items']|length }} article(s)</div>
+      </div>
+
+      <div class="card">
+        <h2>Contrôles</h2>
+        {% for c in report.checks|sort(attribute='hit', reverse=True) %}
+        <div class="check {{ 'hit' if c.hit else ('pass' if c.applicable else 'na') }}">
+          <span class="ic">{{ '!' if c.hit else ('✓' if c.applicable else '–') }}</span>
+          <div>{{ c.label }}{% if c.detail %}<small>{{ c.detail }}</small>{% elif not c.applicable %}<small>non applicable (information absente du reçu)</small>{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty">Déposez l'image d'un reçu ou choisissez un exemple.</div>
+  {% endif %}
+</main>
+</body>
+</html>
